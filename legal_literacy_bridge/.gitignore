@@ -1,0 +1,32 @@
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# Environment Variables
+.env
+
+# Binary Executables
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Audio/Large Files
+*.wav
+*.mp3
+*.m4a
+*.ogg
+*.zip
+*.tar.gz
+
+# Python Cache
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Streamlit and Temp Files
+.streamlit/
+ffcache*
+.DS_Store
+Thumbs.db
