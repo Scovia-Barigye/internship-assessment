@@ -1,8 +1,9 @@
 ---
 title: Legal Literacy Bridge
 emoji: ⚖️
-colorFrom: navy
+colorFrom: blue
 colorTo: yellow
+
 sdk: streamlit
 app_file: legal_literacy_bridge/app.py
 pinned: false
