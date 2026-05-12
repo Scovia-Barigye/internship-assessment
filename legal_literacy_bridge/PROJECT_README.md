@@ -1,6 +1,6 @@
 # ⚖️ Legal Literacy Bridge
 
-**Legal Literacy Bridge** is a professional AI-powered application designed to break down legal barriers for Ugandan citizens. The app transforms complex legal jargon—whether provided as text or via voice recordings—into simplified, understandable summaries in local Ugandan languages. It bridges the gap between the formal justice system and the average citizen by providing accessible, narrated legal information in their native tongue.
+**Legal Literacy Bridge** is a professional AI-powered application designed to break down legal barriers for Ugandan citizens. The app transforms complex legal jargon whether provided as text or via voice recordings into simplified, understandable summaries in local Ugandan languages. It bridges the gap between the formal justice system and the average citizen by providing accessible, narrated legal information in their native tongue.
 
 ---
 
@@ -22,12 +22,6 @@ The application follows a modular 4-Phase pipeline using **Sunbird AI** speciali
 5.  **Phase 4 — Narration (TTS)**: 
     - The translation is converted into high-quality speech for accessibility.
     - **API**: Sunbird TTS (`/tasks/tts`)
-
----
-
-## 🚀 Deployed Application
-Reviewers can try the live application end-to-end here:
-👉 [**Legal Literacy Bridge on Hugging Face Spaces**](https://huggingface.co/spaces/barigye05/legal-literacy-bridge)
 
 ---
 
@@ -86,6 +80,12 @@ streamlit run app.py
     - View the **Translation** in your chosen local language.
     - Use the **Audio Player** to listen to the narration.
 5.  **Download**: Use the provided buttons to save the summary or audio for offline use.
+
+---
+
+## 🚀 Deployed Application
+Reviewers can try the live application end-to-end here:
+👉 [**Legal Literacy Bridge on Hugging Face Spaces**](https://huggingface.co/spaces/barigye05/legal-literacy-bridge)
 
 ---
 
