@@ -5,7 +5,7 @@
 ## 🚀 Key Features
 - **Multimodal Input**: Accept typed legal text or high-capacity audio recordings.
 - **Advanced Audio Processing**: Automatic voice normalization and high-pass filtering to clean up noisy recordings.
-- **Audio Constraint**: Enforces a strict 5-minute limit on audio uploads with clear error feedback.
+- **Long-Form Support**: Intelligent chunking that handles audio files longer than 2 hours.
 - **Local Language Support**: Accurate translations into Luganda, Runyankole, Ateso, Lugbara, and Acholi.
 - **Premium UI**: A law-firm inspired dark mode interface with real-time progress tracking.
 
@@ -78,8 +78,8 @@ streamlit run app.py
 ---
 
 ## ⚠️ Known Limitations
-- **Background Noise**: While the app includes cleaning filters, extreme background music or very low-quality microphones may still impact STT accuracy.
-- **5-Minute Audio Cap**: In accordance with the assessment requirements, audio files are strictly limited to 5 minutes.
+- **Background Noise**: While the app includes cleaning filters, extreme background music or very low-quality microphones may still impact STT accuracy.t
+- **Processing Time**: Very long recordings (2+ hours) require sequential processing and may take several minutes to complete.
 - **Character Limit**: Simplification is optimized for texts under 4,000 characters to ensure the best LLM response quality.
 
 ---

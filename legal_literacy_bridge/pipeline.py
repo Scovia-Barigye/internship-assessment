@@ -57,25 +57,39 @@ class LegalBridgePipeline:
             "target_language": target_language,
         }
 
-    def run_from_audio(self, audio_bytes: bytes, audio_format: str, target_language: str, source_lang: str = "English") -> dict:
+    def run_from_audio(self, audio_bytes: bytes, audio_format: str, target_language: str, source_lang: str = "English", progress_callback=None) -> dict:
         """
         Process audio input through transcription, simplification, translation, and speech synthesis.
         """
+        from .utils import split_audio_into_chunks
+        
+        # 1. Chunk audio (10 min chunks)
+        chunks = split_audio_into_chunks(audio_bytes)
+        full_transcript = []
+        
         # Map source language to code
         from .sunbird_client import SUPPORTED_LANGUAGES
         stt_lang_code = SUPPORTED_LANGUAGES.get(source_lang, "eng")
         
-        # Phase 1: Transcription
-        try:
-            transcript = self.client.transcribe_audio(audio_bytes, language=stt_lang_code)
+        # Phase 1: Transcription (Iterative)
+        for idx, chunk in enumerate(chunks):
+            if progress_callback:
+                progress_callback(idx + 1, len(chunks), f"Transcribing part {idx+1}/{len(chunks)}...")
             
-            if not transcript or not transcript.strip():
-                transcript = "[No clear speech detected in recording]"
-        except Exception as e:
-            raise RuntimeError(f"Phase 1 failed: {str(e)}")
+            try:
+                transcript = self.client.transcribe_audio(chunk, language=stt_lang_code)
+                if transcript and transcript.strip():
+                    full_transcript.append(transcript)
+            except Exception as e:
+                raise RuntimeError(f"Phase 1 failed at chunk {idx+1}: {str(e)}")
         
-        # Continue with text pipeline using transcript
-        results = self.run_from_text(transcript, target_language)
-        results["transcript"] = transcript
+        combined_transcript = " ".join(full_transcript)
+        
+        if not combined_transcript.strip():
+            combined_transcript = "[No clear speech detected in recording]"
+            
+        # Continue with text pipeline using combined transcript
+        results = self.run_from_text(combined_transcript, target_language)
+        results["transcript"] = combined_transcript
         
         return results

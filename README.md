@@ -1,13 +1,3 @@
----
-title: Legal Literacy Bridge
-emoji: ⚖️
-colorFrom: blue
-colorTo: yellow
-sdk: streamlit
-app_file: legal_literacy_bridge/app.py
-pinned: false
----
-
 # Sunbird AI Internship Assessment Exercise
 
 This assessment consists of 3 parts:
@@ -26,6 +16,7 @@ This assessment consists of 3 parts:
 - Run the command `pytest`. (The tests should be failing, it's your task to make them pass. See below for instructions)
 
 ## Part 1: Programming exercises
+There are 2 programming exercises designed to test your competency with the python programming language. 
 
 You can find the starter code and task descriptions in the `exercises/basics.py` file in this repo.
 

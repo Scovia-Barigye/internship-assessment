@@ -3,7 +3,3 @@ venv
 **__pycache__
 .pytest_cache
 .env
-ffcacheKE6KP0
-ffmpeg.exe
-ffprobe.exe
-ffplay.exe

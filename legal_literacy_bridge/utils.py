@@ -23,9 +23,8 @@ def validate_audio_file(uploaded_file) -> Tuple[bytes, str]:
         audio = AudioSegment.from_file(io.BytesIO(audio_bytes), format=extension)
         duration_seconds = len(audio) / 1000.0
         
-        if duration_seconds > 300:
-            raise ValueError("Audio file exceeds the 5-minute limit. Please upload a shorter clip.")
-            
+        # We no longer hard-limit to 5 minutes as we will chunk long-form audio
+        
         # --- AGGRESSIVE AUDIO CLEANING ---
         audio = audio.set_channels(1)
         
@@ -53,6 +52,21 @@ def validate_audio_file(uploaded_file) -> Tuple[bytes, str]:
         if "Audio file exceeds" in str(e):
             raise e
         raise ValueError(f"Could not process audio file: {str(e)}")
+
+def split_audio_into_chunks(audio_bytes: bytes, chunk_length_ms: int = 600000):
+    """
+    Split audio bytes into chunks of specified length (default 10 mins).
+    """
+    audio = AudioSegment.from_file(io.BytesIO(audio_bytes), format="wav")
+    chunks = []
+    
+    for i in range(0, len(audio), chunk_length_ms):
+        chunk = audio[i : i + chunk_length_ms]
+        chunk_buffer = io.BytesIO()
+        chunk.export(chunk_buffer, format="wav")
+        chunks.append(chunk_buffer.getvalue())
+        
+    return chunks
 
 def truncate_text(text: str, max_chars: int = 4000) -> str:
     """
