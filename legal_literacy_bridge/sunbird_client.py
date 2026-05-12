@@ -28,11 +28,11 @@ class SunbirdClient:
         Raises:
             EnvironmentError: If SUNBIRD_API_KEY or SUNBIRD_BASE_URL is missing.
         """
-        self.api_key = os.getenv("SUNBIRD_API_KEY")
+        self.api_key = os.getenv("SUNBIRD_API_KEY") or os.getenv("SUNBIRD_API_TOKEN")
         self.base_url = os.getenv("SUNBIRD_BASE_URL", "https://api.sunbird.ai")
 
         if not self.api_key:
-            raise EnvironmentError("SUNBIRD_API_KEY is missing from environment variables.")
+            raise EnvironmentError("SUNBIRD_API_KEY or SUNBIRD_API_TOKEN is missing from environment variables.")
         
         self.headers = {
             "Authorization": f"Bearer {self.api_key}",
