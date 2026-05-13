@@ -18,6 +18,10 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+@st.cache_resource
+def get_pipeline():
+    return LegalBridgePipeline()
+
 # 2. Modern Professional Facelift (CSS) - PRESERVING ALL ORIGINAL TEXT SLOTS
 st.markdown("""
     <style>
@@ -332,11 +336,18 @@ if input_mode == "📝 Paste Legal Text":
         if not legal_text.strip():
             st.warning("Please provide some text to analyse.")
         else:
-            with st.spinner("⚖️ Processing through 4 AI phases..."):
+            with st.status("⚖️ Processing Analysis...", expanded=True) as status:
                 try:
-                    pipeline = LegalBridgePipeline()
-                    st.session_state["text_result"] = pipeline.run_from_text(legal_text, target_lang)
+                    pipeline = get_pipeline()
+                    st.session_state["text_result"] = pipeline.run_from_text(
+                        legal_text, 
+                        target_lang,
+                        progress_callback=lambda msg: status.update(label=msg, state="running")
+                    )
+                    status.update(label="✅ Analysis Complete!", state="complete", expanded=False)
+                    st.rerun()
                 except Exception as e:
+                    status.update(label="❌ Error Occurred", state="error", expanded=True)
                     st.error(format_error(e))
 
     # Display Text Results
@@ -379,14 +390,23 @@ else:
         if uploaded_audio is None:
             st.warning("Please upload an audio file first.")
         else:
-            with st.spinner("⚖️ Processing through 4 AI phases..."):
+            with st.status("⚖️ Processing Audio...", expanded=True) as status:
                 try:
                     audio_bytes, fmt = validate_audio_file(uploaded_audio)
-                    pipeline = LegalBridgePipeline()
+                    pipeline = get_pipeline()
+                    
+                    def audio_progress(current, total, msg):
+                        status.update(label=f"Phase 1: {msg}", state="running")
+                        
                     st.session_state["audio_result"] = pipeline.run_from_audio(
-                        audio_bytes, fmt, target_lang, source_lang=source_lang
+                        audio_bytes, fmt, target_lang, 
+                        source_lang=source_lang,
+                        progress_callback=audio_progress
                     )
+                    status.update(label="✅ Analysis Complete!", state="complete", expanded=False)
+                    st.rerun()
                 except Exception as e:
+                    status.update(label="❌ Error Occurred", state="error", expanded=True)
                     st.error(format_error(e))
 
     # Display Audio Results

@@ -14,13 +14,14 @@ class LegalBridgePipeline:
         """
         self.client = SunbirdClient()
 
-    def run_from_text(self, legal_text: str, target_language: str) -> Dict[str, Any]:
+    def run_from_text(self, legal_text: str, target_language: str, progress_callback=None) -> Dict[str, Any]:
         """
         Process legal text through simplification, translation, and speech synthesis.
         
         Args:
             legal_text: The input legal text.
             target_language: The display name of the target language.
+            progress_callback: Optional function to report progress.
             
         Returns:
             A dictionary containing intermediate results and audio bytes.
@@ -32,18 +33,21 @@ class LegalBridgePipeline:
         truncated_input = truncate_text(legal_text)
 
         # Phase 2: Simplification
+        if progress_callback: progress_callback("Phase 2: Simplifying legal jargon...")
         try:
             simplified = self.client.simplify_legal_text(truncated_input)
         except Exception as e:
             raise RuntimeError(f"Phase 2 failed: {str(e)}")
 
         # Phase 3: Translation
+        if progress_callback: progress_callback(f"Phase 3: Translating to {target_language}...")
         try:
             translated = self.client.translate_text(simplified, target_language)
         except Exception as e:
             raise RuntimeError(f"Phase 3 failed: {str(e)}")
 
         # Phase 4: Speech Synthesis
+        if progress_callback: progress_callback("Phase 4: Synthesizing audio narration...")
         try:
             audio_bytes = self.client.synthesize_speech(translated, lang_code)
         except Exception as e:
@@ -61,14 +65,14 @@ class LegalBridgePipeline:
         """
         Process audio input through transcription, simplification, translation, and speech synthesis.
         """
-        from .utils import split_audio_into_chunks
+        from utils import split_audio_into_chunks
         
         # 1. Chunk audio (10 min chunks)
         chunks = split_audio_into_chunks(audio_bytes)
         full_transcript = []
         
         # Map source language to code
-        from .sunbird_client import SUPPORTED_LANGUAGES
+        from sunbird_client import SUPPORTED_LANGUAGES
         stt_lang_code = SUPPORTED_LANGUAGES.get(source_lang, "eng")
         
         # Phase 1: Transcription (Iterative)
